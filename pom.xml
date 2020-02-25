@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cysecurity</groupId>
-  <artifactId>JavaVulnerableLab</artifactId>
+  <artifactId>CxPub</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>JavaVulnerableLab Maven Webapp</name>
@@ -42,6 +42,6 @@
 </dependency>	 	
   </dependencies>
   <build>
-    <finalName>JavaVulnerableLab</finalName>
+    <finalName>CxPub</finalName>
   </build>
 </project>
