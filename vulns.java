@@ -18,11 +18,26 @@ public class Vulns {
 		String password = request.getParameter ("password");
 
 		String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
-
 		Connection connection = pool.getConnection();
 		Statement statement = connection.createStatement();
 		result = statement.executeQuery(sql);
 
+		/*  this is the solution
+		//String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
+		String sql = "select * from users where email = ? and password = ? ";
+
+
+		Connection connection = pool.getConnection();
+		//Statement statement = connection.createStatement();
+		PreparedStatement preparedStatement = connection.prepareStatment(sql);
+
+		//Result result = statement.executeQuery(sql);
+		preparedStatement.setString (1, email);
+		preparedStatement.setString (2, password);
+
+		ResultSet result = preparedStatement.executeQuery();
+
+		*/
 		if (result.next()) {
 			loggedIn = true;
 			doGet(result,req,response);
