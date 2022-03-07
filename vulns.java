@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.PrintWriter;
-import mysql;
 
 public class Vulns {
 
@@ -15,45 +14,50 @@ public class Vulns {
 
 	// SQLi vulnerability
 	public static void input (DataSource pool) {
-		String email = request.getParameter ("email");
-		String password = request.getParameter ("password");
+		try {
 
+			String email = request.getParameter ("email");
+			String password = request.getParameter ("password");
 
-		
-		String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
-		Connection connection = pool.getConnection();
-		Statement statement = connection.createStatement();
-		result = statement.executeQuery(sql);
-		
-		
+			//String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
+			String sql = "select * from users where email = ? and password = ? ";
 
-		//this is the solution
-		/*
-		String sql = "select * from users where email = ? and password = ? ";
-		Connection connection = pool.getConnection();
-		PreparedStatement preparedStatement = connection.prepareStatment(sql);
-		preparedStatement.setString (1, email);
-		preparedStatement.setString (2, password);
-		ResultSet result = preparedStatement.executeQuery();
-		*/
-		
-		if (result.next()) {
-			loggedIn = true;
-			doGet(result,req,response);
-		} else {
-			out.println("No results");
+			Connection connection = pool.getConnection();
+			//Statement statement = connection.createStatement();
+			PreparedStatement ps = connection.prepareStatement(sql);
+			//result = statement.executeQuery(sql);
+			ps.setString(1, email);
+			ps.setString(2, password);
+			result = ps.executeQuery();
+
+			if (result.next()) {
+				loggedIn = true;
+				doGet(result,req,response);
+			} else {
+				out.println("No results");
+			}
+		}
+		catch()
+		{
+			out.println("Overly broad Exception");
 		}
 	}
 
 	// XSS vulnerability	
 	protected void doGet(Result res, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     
-    		response.setContentType("text/html;charset=UTF-8");
+    		try {
+			response.setContentType("text/html;charset=UTF-8");
+			response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
       
-  		PrintWriter out = response.getWriter();
-  		String loc = request.getParameter("location");
-		loc+=res.getString("GEO_LOC");
-  
-  		out.println("<h1> Location: " + loc + "<h1>");
+  			PrintWriter out = response.getWriter();
+  			String loc = request.getParameter("location");
+			loc+=res.getString("GEO_LOC");
+ 			String escapedLocation = HtmlEscapers.htmlEscaper().escape(loc); 
+  			out.println("<h1> Location: " + escapedLocation + "<h1>");
+		}
+		catch()	{
+			out.println("Error caught by overly broad exception handler");
+		}
 	}
 }
