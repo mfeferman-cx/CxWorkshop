@@ -20,11 +20,6 @@ public class Vulns {
 			String password = request.getParameter ("password");
 
 			
-			String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
-			Connection connection = pool.getConnection();
-			Statement statement = connection.createStatement();
-			result = statement.executeQuery(sql);
-			
 			
 			/*
 			String sql = "select * from users where email = ? and password = ? ";
@@ -33,6 +28,13 @@ public class Vulns {
 			ps.setString(2, password);
 			result = ps.executeQuery();
 			*/
+			
+			
+			String sql = "select * from users where (email ='" + email + "' and password'" + password + "')";
+			Connection connection = pool.getConnection();
+			Statement statement = connection.createStatement();
+			result = statement.executeQuery(sql);
+			
 			
 			if (result.next()) {
 				loggedIn = true;
