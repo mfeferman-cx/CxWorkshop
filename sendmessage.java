@@ -45,16 +45,21 @@ public class SendMessage extends HttpServlet {
                  String sender=request.getParameter("sender");
                     if(con!=null && !con.isClosed() && request.getParameter("send")!=null)
                         {
-                           //PreparedStatement to Prevent SQL Injection attack:       
+                           //PreparedStatement to Prevent SQL Injection attack:
+                     /*
                             PreparedStatement pstmt=con.prepareStatement("INSERT into UserMessages(recipient, sender, subject, msg) values (?,?,?,?)");
                             pstmt.setString(1, recipient);
                             pstmt.setString(2, sender);
                             pstmt.setString(3, subject);
                             pstmt.setString(4, msg);
                             pstmt.executeUpdate();
-                            response.sendRedirect(request.getContextPath()+"/vulnerability/SendMessage.jsp?status=<b style='color:green'>* Message successfully sent *</b>");
+                       */
+                           String qry = "INSERT into UserMessages(recipient, sender, subject, msg) values ("+recipient+","+sender+","+subject+","+msg+")";
+                           Statement statement = con.createStatement();
+		                         Result result = statement.executeUpdate(qry);
+                           response.sendRedirect(request.getContextPath()+"/vulnerability/SendMessage.jsp?status=<b style='color:green'>* Message successfully sent *</b>");
                                     
-                               }
+                     }
                     else
                     {
                            response.sendRedirect(request.getContextPath()+"/vulnerability/SendMessage.jsp?status=<b style='color:red'>* Something Went Wrong</b>");
